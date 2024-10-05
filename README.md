@@ -1,2 +1,2 @@
-# gitlab-for-scala
+# jira-for-scala
 
