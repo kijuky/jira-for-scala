@@ -37,6 +37,8 @@ object Implicits {
     def versions(projectName: String): Seq[Version] =
       project(projectName).getVersions.asScala.toSeq
     def issue(name: String): Issue = issueClient.getIssue(name).get()
+    def issues(filterId: Int): Iterable[Issue] =
+      issues(searchClient.getFilter(filterId).get().getJql)
     def issues(jql: String): Seq[Issue] =
       searchClient.searchJql(jql).get().getIssues.asScala.toSeq
     def createIssue(
