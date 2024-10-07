@@ -1,16 +1,18 @@
 package io.github.kijuky.jira
 
 import com.atlassian.httpclient.api.Request
-import com.atlassian.jira.rest.client.api.AuthenticationHandler
 import com.atlassian.jira.rest.client.api.domain._
 import com.atlassian.jira.rest.client.api.domain.input.{
   IssueInputBuilder,
   LinkIssuesInput
 }
+import com.atlassian.jira.rest.client.api._
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory
+import org.joda.time.DateTime
 
-import java.net.{URI, URLEncoder}
+import java.net.{URI, URL, URLEncoder}
 import java.nio.charset.StandardCharsets
+import java.time.{Instant, OffsetDateTime, ZoneOffset}
 import scala.collection.JavaConverters._
 
 object Implicits {
@@ -28,9 +30,10 @@ object Implicits {
   implicit class RichJiraClient(jiraClient: JiraClient) {
     private implicit val implicitJiraClient: JiraClient = jiraClient
     private lazy val serverUri = jiraClient.serverUri
-    private lazy val projectClient = jiraClient.getProjectClient
-    private lazy val issueClient = jiraClient.getIssueClient
-    private lazy val searchClient = jiraClient.getSearchClient
+    lazy val projectClient: ProjectRestClient = jiraClient.getProjectClient
+    lazy val issueClient: IssueRestClient = jiraClient.getIssueClient
+    lazy val searchClient: SearchRestClient = jiraClient.getSearchClient
+    lazy val userClient: UserRestClient = jiraClient.getUserClient
 
     def project(name: String): Project =
       projectClient.getProject(name).get()
@@ -102,6 +105,38 @@ object Implicits {
     def name: String = version.getName
   }
 
+  implicit class RichIssue(issue: Issue)(implicit jira: JiraClient) {
+    def assignee: User = issue.getAssignee
+    def assigneeName: String = assignee.getName
+    def baseUrl: URL = URI.create(url.toString.split("/rest/")(0)).toURL
+    def browseUrl = s"$baseUrl/browse/$key"
+    def description: String = issue.getDescription
+    def dueDate: OffsetDateTime = toOffsetDateTime(issue.getDueDate)
+    def dueDate_=(dueDate: OffsetDateTime): Unit = {
+      val dueDateTime = toDateTime(dueDate)
+      val input = new IssueInputBuilder().setDueDate(dueDateTime).build()
+      jira.issueClient.updateIssue(key, input).claim()
+    }
+    def key: String = issue.getKey
+    def reporter: User = issue.getReporter
+    def reporter_=(reporter: User): Unit = {
+      val input = new IssueInputBuilder().setReporter(reporter).build()
+      jira.issueClient.updateIssue(key, input).claim()
+    }
+    def reporterName: String = reporter.getName
+    def reporterName_=(reporterName: String): Unit = {
+      reporter = jira.userClient.getUser(reporterName).get()
+    }
+    def self: URI = issue.getSelf
+    def summary: String = issue.getSummary
+    def updatedDate: OffsetDateTime = toOffsetDateTime(issue.getUpdateDate)
+    def url: URL = self.toURL
+    private def toOffsetDateTime(dateTime: DateTime): OffsetDateTime =
+      Instant.ofEpochMilli(dateTime.getMillis).atOffset(ZoneOffset.UTC)
+    private def toDateTime(offsetDateTime: OffsetDateTime): DateTime =
+      new DateTime(offsetDateTime.toInstant.toEpochMilli)
+  }
+
   implicit class RichBasicIssue[I <: BasicIssue](basicIssue: I)(implicit
     jira: JiraClient
   ) {
@@ -110,7 +145,7 @@ object Implicits {
       case _            => jira.issue(key)
     }
 
-    def assignee: User = toIssue.getAssignee
+    def assignee: User = toIssue.assignee
     def assigneeName: String = assignee.getName
     def key: String = basicIssue.getKey
     def link(toIssue: BasicIssue, linkType: String = "Relates"): I = {
