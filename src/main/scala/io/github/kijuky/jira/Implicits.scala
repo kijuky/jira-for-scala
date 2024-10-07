@@ -106,8 +106,8 @@ object Implicits {
   }
 
   implicit class RichIssue(issue: Issue)(implicit jira: JiraClient) {
-    def assignee: User = issue.getAssignee
-    def assigneeName: String = assignee.getName
+    def assignee: Option[User] = Option(issue.getAssignee)
+    def assigneeName: Option[String] = assignee.map(_.getName)
     def baseUrl: URL = URI.create(url.toString.split("/rest/")(0)).toURL
     def browseUrl = s"$baseUrl/browse/$key"
     def description: String = issue.getDescription
@@ -145,8 +145,8 @@ object Implicits {
       case _            => jira.issue(key)
     }
 
-    def assignee: User = toIssue.assignee
-    def assigneeName: String = assignee.getName
+    def assignee: Option[User] = toIssue.assignee
+    def assigneeName: Option[String] = toIssue.assigneeName
     def key: String = basicIssue.getKey
     def link(toIssue: BasicIssue, linkType: String = "Relates"): I = {
       jira.link(basicIssue, toIssue, linkType)
