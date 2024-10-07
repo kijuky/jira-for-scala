@@ -4,7 +4,7 @@ import com.atlassian.jira.rest.client.api._
 
 import java.net.URI
 
-class JiraClient(val serverUri: URI, underlying: JiraRestClient)
+class JiraClient(val serverUri: String, underlying: JiraRestClient)
     extends JiraRestClient {
 
   override def getIssueClient: IssueRestClient =

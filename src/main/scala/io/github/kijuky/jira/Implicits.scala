@@ -16,11 +16,11 @@ import java.time.{Instant, OffsetDateTime, ZoneOffset}
 import scala.collection.JavaConverters._
 
 object Implicits {
-  def createJiraClient(serverUri: URI, accessToken: String): JiraClient =
+  def createJiraClient(serverUri: String, accessToken: String): JiraClient =
     new JiraClient(
       serverUri,
       new AsynchronousJiraRestClientFactory().create(
-        serverUri,
+        new URI(serverUri),
         { (builder: Request.Builder) =>
           builder.setHeader("Authorization", s"Bearer $accessToken")
         }: AuthenticationHandler
