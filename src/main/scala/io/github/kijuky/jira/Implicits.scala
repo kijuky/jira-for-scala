@@ -27,6 +27,36 @@ object Implicits {
       )
     )
 
+  class JiraClient(val serverUri: String, underlying: JiraRestClient)
+      extends JiraRestClient {
+    override def getIssueClient: IssueRestClient =
+      underlying.getIssueClient
+    override def getSessionClient: SessionRestClient =
+      underlying.getSessionClient
+    override def getUserClient: UserRestClient =
+      underlying.getUserClient
+    override def getGroupClient: GroupRestClient =
+      underlying.getGroupClient
+    override def getProjectClient: ProjectRestClient =
+      underlying.getProjectClient
+    override def getComponentClient: ComponentRestClient =
+      underlying.getComponentClient
+    override def getMetadataClient: MetadataRestClient =
+      underlying.getMetadataClient
+    override def getSearchClient: SearchRestClient =
+      underlying.getSearchClient
+    override def getVersionRestClient: VersionRestClient =
+      underlying.getVersionRestClient
+    override def getProjectRolesRestClient: ProjectRolesRestClient =
+      underlying.getProjectRolesRestClient
+    override def getAuditRestClient: AuditRestClient =
+      underlying.getAuditRestClient
+    override def getMyPermissionsRestClient: MyPermissionsRestClient =
+      underlying.getMyPermissionsRestClient
+    override def close(): Unit =
+      underlying.close()
+  }
+
   implicit class RichJiraClient(jiraClient: JiraClient) {
     private implicit val implicitJiraClient: JiraClient = jiraClient
     private lazy val serverUri = jiraClient.serverUri
