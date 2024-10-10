@@ -11,7 +11,7 @@ lazy val root = project
         "sal-api"
       ),
       // atlassian-plugin を解決できないので、jarを直接取得する
-      "com.atlassian.sal" % "sal-api" % "4.4.4" artifacts
+      "com.atlassian.sal" % "sal-api" % "4.4.5" artifacts
         Artifact("sal-api", "jar", "jar"),
       // Runtime で良いが面倒なので加えておく。
       "io.atlassian.fugue" % "fugue" % "4.7.2"
