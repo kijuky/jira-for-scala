@@ -2,7 +2,7 @@ lazy val root = project
   .in(file("."))
   .settings(
     name := "jira-for-scala",
-    scalaVersion := "2.12.20",
+    scalaVersion := "2.13.15",
     crossScalaVersions := Seq(scalaVersion.value, "3.3.4"),
     resolvers += "Atlassian Public" at "https://maven.atlassian.com/content/repositories/atlassian-public/",
     libraryDependencies ++= Seq(
