@@ -14,7 +14,7 @@ lazy val root = project
       "com.atlassian.sal" % "sal-api" % "4.4.4" artifacts
         Artifact("sal-api", "jar", "jar"),
       // Runtime で良いが面倒なので加えておく。
-      "io.atlassian.fugue" % "fugue" % "4.7.2"
+      "io.atlassian.fugue" % "fugue" % "6.1.0"
     )
   )
 
