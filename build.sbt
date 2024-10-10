@@ -6,7 +6,7 @@ lazy val root = project
     crossScalaVersions := Seq(scalaVersion.value, "3.3.4"),
     resolvers += "Atlassian Public" at "https://maven.atlassian.com/content/repositories/atlassian-public/",
     libraryDependencies ++= Seq(
-      "com.atlassian.jira" % "jira-rest-java-client-core" % "5.2.7" exclude (
+      "com.atlassian.jira" % "jira-rest-java-client-core" % "6.0.1" exclude (
         "com.atlassian.sal",
         "sal-api"
       ),
