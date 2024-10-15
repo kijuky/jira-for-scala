@@ -4,6 +4,14 @@ lazy val root = project
     name := "jira-for-scala",
     scalaVersion := "2.12.20",
     crossScalaVersions := Seq(scalaVersion.value, "3.3.4"),
+    console / initialCommands := {
+      val serverUri = sys.env.getOrElse("JIRA_SERVER_URI", "")
+      val accessToken = sys.env.getOrElse("JIRA_ACCESS_TOKEN", "")
+      s"""
+         |val jira = io.github.kijuky.jira.JiraFacade("$serverUri", "$accessToken")
+         |import jira.Implicits._
+         |""".stripMargin
+    },
     resolvers += "Atlassian Public" at "https://maven.atlassian.com/content/repositories/atlassian-public/",
     libraryDependencies ++= Seq(
       "com.atlassian.jira" % "jira-rest-java-client-core" % "5.2.7" exclude (

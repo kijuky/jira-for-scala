@@ -112,14 +112,14 @@ object Implicits {
       description: String = "",
       priority: Int = 3
     ): String = {
-      val charset = StandardCharsets.UTF_8.name
+      val encode = URLEncoder.encode(_: String, StandardCharsets.UTF_8.name)
       val params = Map[String, String](
         "pid" -> s"$projectId",
         "issuetype" -> s"$issueTypeId",
-        "summary" -> URLEncoder.encode(summary.trim, charset),
+        "summary" -> encode(summary.trim),
         "priority" -> s"$priority",
         "reporter" -> reporterName,
-        "description" -> URLEncoder.encode(description.trim, charset),
+        "description" -> encode(description.trim),
         "assignee" -> assigneeName
       ).map { case (key, value) => s"$key=$value" }.mkString("&")
       s"$serverUri/secure/CreateIssueDetails!init.jspa?$params"
