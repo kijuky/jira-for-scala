@@ -2,7 +2,7 @@ lazy val root = project
   .in(file("."))
   .settings(
     name := "jira-for-scala",
-    scalaVersion := "2.12.20",
+    scalaVersion := "2.12.20", // scala-steward:off
     crossScalaVersions := Seq(scalaVersion.value, "3.3.4"),
     console / initialCommands := {
       val serverUri = sys.env.getOrElse("JIRA_SERVER_URI", "")
