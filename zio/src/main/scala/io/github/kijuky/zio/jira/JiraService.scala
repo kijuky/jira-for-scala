@@ -3,20 +3,14 @@ package io.github.kijuky.zio.jira
 import zio.*
 
 object JiraService {
-  def layer: TaskLayer[Jira] =
+  def layer(serverUri: String = "", accessToken: String = ""): TaskLayer[Jira] =
     ZLayer.scoped {
       ZIO.acquireRelease {
         for {
           optServerUri <- System.env("JIRA_SERVER_URI")
-          serverUri <- ZIO
-            .fromOption(optServerUri)
-            .orElseFail(new IllegalStateException("JIRA_SERVER_URI is not set"))
+          serverUri <- ZIO.succeed(optServerUri.getOrElse(serverUri))
           optAccessToken <- System.env("JIRA_ACCESS_TOKEN")
-          accessToken <- ZIO
-            .fromOption(optAccessToken)
-            .orElseFail(
-              new IllegalStateException("JIRA_ACCESS_TOKEN is not set")
-            )
+          accessToken <- ZIO.succeed(optAccessToken.getOrElse(accessToken))
         } yield Jira(serverUri, accessToken)
       } { jira =>
         ZIO.succeed(jira.close())

@@ -46,8 +46,7 @@ import zio._
 object Main extends ZIOAppDefault {
   def run = {
     for {
-      issueRepo <- ZIO.service[JiraIssueRepo]
-      issues <- issueRepo.list(filterId = xxxxx)
+      issues <- JiraIssueRepo.list(filterId = xxxxx)
       _ <- ZIO.foreach(issues)(i => Console.printLine(i.summary))
     } yield ()
   }.provide(JiraService.layer, JiraIssueRepoImpl.layer)
