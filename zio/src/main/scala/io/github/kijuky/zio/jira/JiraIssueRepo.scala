@@ -15,5 +15,5 @@ object JiraIssueRepo {
   def list(jql: String): RIO[JiraIssueRepo, Seq[JiraIssue]] =
     ZIO.serviceWithZIO(_.list(jql))
   def save(issue: JiraIssue): RIO[JiraIssueRepo, Unit] =
-    ZIO.serviceWith(_.save(issue))
+    ZIO.serviceWithZIO(_.save(issue))
 }

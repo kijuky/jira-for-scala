@@ -10,13 +10,11 @@ object JiraService {
           optServerUri <- System.env("JIRA_SERVER_URI")
           serverUri <- ZIO
             .fromOption(optServerUri)
-            .mapError(_ =>
-              new IllegalStateException("JIRA_SERVER_URI is not set")
-            )
+            .orElseFail(new IllegalStateException("JIRA_SERVER_URI is not set"))
           optAccessToken <- System.env("JIRA_ACCESS_TOKEN")
           accessToken <- ZIO
             .fromOption(optAccessToken)
-            .mapError(_ =>
+            .orElseFail(
               new IllegalStateException("JIRA_ACCESS_TOKEN is not set")
             )
         } yield Jira(serverUri, accessToken)
