@@ -1,5 +1,21 @@
+ThisBuild / resolvers += "Atlassian Public" at "https://maven.atlassian.com/content/repositories/atlassian-public/"
+val jiraDependencies = Seq(
+  "com.atlassian.jira" % "jira-rest-java-client-core" % "5.2.7" exclude
+    ("com.atlassian.sal", "sal-api"),
+  // atlassian-plugin を解決できないので、jarを直接取得する
+  "com.atlassian.sal" % "sal-api" % "4.4.4" artifacts
+    Artifact("sal-api", "jar", "jar"),
+  // Runtime で良いが面倒なので加えておく。
+  "io.atlassian.fugue" % "fugue" % "4.7.2"
+)
+
 lazy val root = project
   .in(file("."))
+  .aggregate(vanilla, zio)
+  .settings(publish / skip := true)
+
+lazy val vanilla = project
+  .in(file("vanilla"))
   .settings(
     name := "jira-for-scala",
     scalaVersion := "2.12.20", // scala-steward:off
@@ -12,18 +28,16 @@ lazy val root = project
          |import jira.Implicits._
          |""".stripMargin
     },
-    resolvers += "Atlassian Public" at "https://maven.atlassian.com/content/repositories/atlassian-public/",
-    libraryDependencies ++= Seq(
-      "com.atlassian.jira" % "jira-rest-java-client-core" % "5.2.7" exclude (
-        "com.atlassian.sal",
-        "sal-api"
-      ),
-      // atlassian-plugin を解決できないので、jarを直接取得する
-      "com.atlassian.sal" % "sal-api" % "4.4.4" artifacts
-        Artifact("sal-api", "jar", "jar"),
-      // Runtime で良いが面倒なので加えておく。
-      "io.atlassian.fugue" % "fugue" % "4.7.2"
-    )
+    libraryDependencies ++= jiraDependencies
+  )
+
+lazy val zio = project
+  .in(file("zio"))
+  .settings(
+    name := "jira-for-zio",
+    scalaVersion := "3.3.4",
+    libraryDependencies ++= jiraDependencies ++
+      Seq("dev.zio" %% "zio" % "2.1.6")
   )
 
 inThisBuild(

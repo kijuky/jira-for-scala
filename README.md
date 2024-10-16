@@ -41,23 +41,15 @@ object Main extends App with JiraComponent {
 ### zio
 
 ```scala
-import io.githug.kijuky.jira.JiraFacade
-import zio._
-object JiraService {
-  def layer = ZLayer.succeed(JiraFacade("serverUri", "accessToken"))
-}
-```
-
-```scala
+import io.github.kijuky.zio.jira._
 import zio._
 object Main extends ZIOAppDefault {
   def run = {
     for {
-      jira <- ZIO.service[JiraService]
-    } yield {
-      import jira.Implicits._
-      jira.issues(filterId = xxxxx).foreach(i => println(i.summary))
-    }
-  }.provide(JiraService.layer)
+      issueRepo <- ZIO.service[JiraIssueRepo]
+      issues <- issueRepo.list(filterId = xxxxx)
+      _ <- ZIO.foreach(issues)(i => Console.printLine(i.summary))
+    } yield ()
+  }.provide(JiraService.layer, JiraIssueRepoImpl.layer)
 }
 ```
