@@ -20,6 +20,7 @@ final case class JiraIssue(underlying: Issue, input: IssueInput) {
   def reporterName: Option[String] = reporter.map(_.name)
   def self: URI = underlying.getSelf
   def summary: String = underlying.getSummary
+  def updatedDate: OffsetDateTime = toOffsetDateTime(underlying.getUpdateDate)
 
   def url: URL = self.toURL
   def baseUrl: URL = URI.create(url.toString.split("/rest/")(0)).toURL
