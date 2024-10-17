@@ -6,7 +6,7 @@ val jiraDependencies = Seq(
   "com.atlassian.sal" % "sal-api" % "4.4.4" artifacts
     Artifact("sal-api", "jar", "jar"),
   // Runtime で良いが面倒なので加えておく。
-  "io.atlassian.fugue" % "fugue" % "4.7.2",
+  "io.atlassian.fugue" % "fugue" % "6.1.0",
   "org.slf4j" % "slf4j-simple" % "1.7.36" % Test // scala-steward:off
 )
 
