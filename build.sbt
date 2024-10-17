@@ -7,7 +7,7 @@ val jiraDependencies = Seq(
     Artifact("sal-api", "jar", "jar"),
   // Runtime で良いが面倒なので加えておく。
   "io.atlassian.fugue" % "fugue" % "4.7.2",
-  "org.slf4j" % "slf4j-simple" % "1.7.36" % Test // scala-steward:off
+  "org.slf4j" % "slf4j-simple" % "1.7.36" % Test
 )
 
 lazy val root = project

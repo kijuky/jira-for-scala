@@ -1,6 +1,5 @@
 package io.github.kijuky.zio.jira
 
-import com.atlassian.jira.rest.client.api.domain.input.IssueInput
 import zio.*
 
 trait JiraIssueRepo {
