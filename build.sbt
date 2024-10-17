@@ -1,6 +1,6 @@
 ThisBuild / resolvers += "Atlassian Public" at "https://maven.atlassian.com/content/repositories/atlassian-public/"
 val jiraDependencies = Seq(
-  "com.atlassian.jira" % "jira-rest-java-client-core" % "5.2.7" exclude
+  "com.atlassian.jira" % "jira-rest-java-client-core" % "6.0.1" exclude
     ("com.atlassian.sal", "sal-api"),
   // atlassian-plugin を解決できないので、jarを直接取得する
   "com.atlassian.sal" % "sal-api" % "4.4.4" artifacts
