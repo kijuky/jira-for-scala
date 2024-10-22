@@ -1,5 +1,6 @@
 package io.github.kijuky.zio.jira
 
+import com.atlassian.jira.rest.client.api.domain.input.TransitionInput
 import zio.*
 
 import scala.concurrent.Future
@@ -30,6 +31,18 @@ private case class JiraIssueRepoImpl(jira: Jira) extends JiraIssueRepo {
         Future(jira.issueClient.updateIssue(issue.key, issue.input).get())
       )
     } yield ()
+
+  override def transition(issue: JiraIssue, id: Int): Task[Unit] = {
+    for {
+      _ <- ZIO.fromFuture(implicit ec =>
+        Future(
+          jira.issueClient
+            .transition(issue.underlying, TransitionInput(id))
+            .get()
+        )
+      )
+    } yield ()
+  }
 }
 
 object JiraIssueRepoImpl {
