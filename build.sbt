@@ -37,8 +37,12 @@ lazy val zio = project
   .settings(
     name := "jira-for-zio",
     scalaVersion := "3.3.4",
+    scalacOptions ++= Seq("-deprecation"),
     libraryDependencies ++= jiraDependencies ++
-      Seq("dev.zio" %% "zio" % "2.1.11")
+      Seq(
+        "dev.zio" %% "zio" % "2.1.11",
+        "dev.zio" %% "zio-test-sbt" % "2.1.11" % Test
+      )
   )
 
 inThisBuild(

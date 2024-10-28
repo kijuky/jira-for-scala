@@ -8,7 +8,7 @@ import zio.*
 import java.net.{URI, URL}
 import java.time.{Instant, OffsetDateTime, ZoneOffset}
 
-final case class JiraIssue(underlying: Issue, input: IssueInput) {
+final case class JiraIssue(underlying: Issue, input: IssueInput):
   def assignee: Option[JiraUser] =
     Option(underlying.getAssignee).map(JiraUser.apply)
   def assigneeName: Option[String] = assignee.map(_.name)
@@ -29,10 +29,8 @@ final case class JiraIssue(underlying: Issue, input: IssueInput) {
   private def toOffsetDateTime(dateTime: DateTime): OffsetDateTime =
     Instant.ofEpochMilli(dateTime.getMillis).atOffset(ZoneOffset.UTC)
   private def toDateTime(offsetDateTime: OffsetDateTime): DateTime =
-    new DateTime(offsetDateTime.toInstant.toEpochMilli)
-}
+    DateTime(offsetDateTime.toInstant.toEpochMilli)
 
-object JiraIssue {
+object JiraIssue:
   def applyZIO(issue: Issue): UIO[JiraIssue] =
     ZIO.succeed(apply(issue, IssueInput.createWithFields()))
-}
