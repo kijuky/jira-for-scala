@@ -6,19 +6,17 @@ import zio.*
 import scala.concurrent.Future
 import scala.jdk.CollectionConverters.*
 
-case class JiraIssueRepoImpl(service: JiraService) extends JiraIssueRepo:
+case class JiraIssueRepoImpl(jira: JiraService) extends JiraIssueRepo:
   override def list(filterId: Long): Task[Seq[JiraIssue]] =
     for
-      filter <- ZIO.attemptBlocking(
-        service.searchClient.getFilter(filterId).get()
-      )
+      filter <- ZIO.attemptBlocking(jira.searchClient.getFilter(filterId).get())
       jiraIssues <- list(filter.getJql)
     yield jiraIssues
 
   override def list(jql: String): Task[Seq[JiraIssue]] =
     for
       searchResult <- ZIO.attemptBlocking(
-        service.searchClient.searchJql(jql).get()
+        jira.searchClient.searchJql(jql).get()
       )
       jiraIssues <- ZIO.foreach(searchResult.getIssues.asScala.toSeq)(
         JiraIssue.applyZIO
@@ -27,13 +25,13 @@ case class JiraIssueRepoImpl(service: JiraService) extends JiraIssueRepo:
 
   override def save(issue: JiraIssue): Task[Unit] =
     for _ <- ZIO.attemptBlocking(
-        service.issueClient.updateIssue(issue.key, issue.input).get()
+        jira.issueClient.updateIssue(issue.key, issue.input).get()
       )
     yield ()
 
   override def transition(issue: JiraIssue, id: Int): Task[Unit] =
     for _ <- ZIO.attemptBlocking(
-        service.issueClient
+        jira.issueClient
           .transition(issue.underlying, TransitionInput(id))
           .get()
       )

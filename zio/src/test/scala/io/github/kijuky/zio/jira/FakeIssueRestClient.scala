@@ -10,7 +10,6 @@ import com.atlassian.jira.rest.client.api.{
 import io.atlassian.util.concurrent.{Promise, Promises}
 
 import java.io.{File, InputStream}
-import java.lang
 import java.net.URI
 import java.util.concurrent.CompletableFuture
 import scala.jdk.CollectionConverters.*

@@ -2,10 +2,10 @@ package io.github.kijuky.zio.jira
 
 import zio.*
 
-private case class JiraServiceProviderImpl(service: JiraService)
+private case class JiraServiceProviderImpl(jira: JiraService)
     extends JiraServiceProvider:
   override def get: Task[JiraService] =
-    ZIO.succeed(service)
+    ZIO.succeed(jira)
 
 object JiraServiceProviderImpl:
   def layer(
