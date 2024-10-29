@@ -13,13 +13,10 @@ object JiraServiceProviderImpl:
     accessToken: String = ""
   ): TaskLayer[JiraService] =
     ZLayer.scoped:
-      ZIO.acquireRelease {
+      ZIO.fromAutoCloseable:
         for
           optServerUri <- System.env("JIRA_SERVER_URI")
           serverUri <- ZIO.succeed(optServerUri.getOrElse(serverUri))
           optAccessToken <- System.env("JIRA_ACCESS_TOKEN")
           accessToken <- ZIO.succeed(optAccessToken.getOrElse(accessToken))
         yield JiraService(serverUri, accessToken)
-      } { service =>
-        ZIO.succeed(service.close())
-      }
