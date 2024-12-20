@@ -40,8 +40,8 @@ lazy val zio = project
     scalacOptions ++= Seq("-deprecation"),
     libraryDependencies ++= jiraDependencies ++
       Seq(
-        "dev.zio" %% "zio" % "2.1.11",
-        "dev.zio" %% "zio-test-sbt" % "2.1.11" % Test
+        "dev.zio" %% "zio" % "2.1.14",
+        "dev.zio" %% "zio-test-sbt" % "2.1.14" % Test
       )
   )
 
