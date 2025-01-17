@@ -20,17 +20,12 @@ case class FakeIssueRestClient(
   doGetCreateIssueMetadata: GetCreateIssueMetadataOptions => Seq[CimProject] =
     null,
   doCreateIssues: Seq[IssueInput] => BulkOperationResult[BasicIssue] = null,
-  doGetCreateIssueMetaProjectIssueTypes: (
-    String,
-    Long,
-    Int
-  ) => Page[IssueType] = null,
-  doGetCreateIssueMetaFields: (
-    String,
-    String,
-    Long,
-    Int
-  ) => Page[CimFieldInfo] = null,
+  doGetCreateIssueMetaProjectIssueTypes: (String, Long, Int) => Page[
+    IssueType
+  ] = null,
+  doGetCreateIssueMetaFields: (String, String, Long, Int) => Page[
+    CimFieldInfo
+  ] = null,
   doGetIssue: String => Issue = null,
   doGetIssueDetail: (String, Seq[Expandos]) => Issue = null,
   doDeleteIssue: (String, Boolean) => Unit = null,
