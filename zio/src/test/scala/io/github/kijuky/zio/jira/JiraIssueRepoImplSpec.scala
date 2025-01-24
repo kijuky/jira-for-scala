@@ -13,8 +13,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           Seq(issue) = actual
         yield Chunk(test("課題を返すこと"):
           assertTrue:
-            issue.summary == "Fake Issue"
-        )
+            issue.summary == "Fake Issue")
       .provide(ZLayer:
         val issues = Seq(FakeIssue(summary = "Fake Issue"))
         val searchClient = FakeSearchRestClient(
@@ -23,8 +22,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
         )
         val restClient = FakeJiraRestClient(searchClient = searchClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
       suite("searchJqlが課題を返さなかった場合"):
         for
@@ -32,8 +30,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           actual <- sut.list(123456)
         yield Chunk(test("課題を返さないこと"):
           assertTrue:
-            actual.isEmpty
-        )
+            actual.isEmpty)
       .provide(ZLayer:
         val searchClient = FakeSearchRestClient(
           doGetFilterId = _ => FakeFilter(),
@@ -41,8 +38,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
         )
         val restClient = FakeJiraRestClient(searchClient = searchClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
       suite("searchJqlでエラーが発生した場合"):
         for
@@ -50,8 +46,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           isFailure <- sut.list(123456).isFailure
         yield Chunk(test("失敗すること"):
           assertTrue:
-            isFailure
-        )
+            isFailure)
       .provide(ZLayer:
         val searchClient = FakeSearchRestClient(
           doGetFilterId = _ => FakeFilter(),
@@ -59,8 +54,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
         )
         val restClient = FakeJiraRestClient(searchClient = searchClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
       suite("getFilterでエラーが発生した場合"):
         for
@@ -68,15 +62,13 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           isFailure <- sut.list(123456).isFailure
         yield Chunk(test("失敗すること"):
           assertTrue:
-            isFailure
-        )
+            isFailure)
       .provide(ZLayer:
         val searchClient =
           FakeSearchRestClient(doGetFilterId = _ => throw RuntimeException())
         val restClient = FakeJiraRestClient(searchClient = searchClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
     suiteAll("list(jql)"):
       suite("searchJqlが課題を返した場合"):
@@ -86,8 +78,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           Seq(issue) = actual
         yield Chunk(test("課題を返すこと"):
           assertTrue:
-            issue.summary == "Fake Issue"
-        )
+            issue.summary == "Fake Issue")
       .provide(ZLayer:
         val issues = Seq(FakeIssue(summary = "Fake Issue"))
         val searchClient = FakeSearchRestClient(doSearchJql =
@@ -95,8 +86,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
         )
         val restClient = FakeJiraRestClient(searchClient = searchClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
       suite("searchJqlが課題を返さなかった場合"):
         for
@@ -104,8 +94,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           actual <- sut.list("filterId = 123456")
         yield Chunk(test("課題を返さないこと"):
           assertTrue:
-            actual.isEmpty
-        )
+            actual.isEmpty)
       .provide(ZLayer:
         val searchClient =
           FakeSearchRestClient(doSearchJql =
@@ -113,8 +102,7 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           )
         val restClient = FakeJiraRestClient(searchClient = searchClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
       suite("searchJqlでエラーが発生した場合"):
         for
@@ -122,15 +110,13 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           isFailure <- sut.list(123456).isFailure
         yield Chunk(test("失敗すること"):
           assertTrue:
-            isFailure
-        )
+            isFailure)
       .provide(ZLayer:
         val searchClient =
           FakeSearchRestClient(doSearchJql = _ => throw RuntimeException())
         val restClient = FakeJiraRestClient(searchClient = searchClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
     suiteAll("save"):
       suite("updateIssueが正常終了した場合"):
@@ -141,14 +127,12 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
             .isSuccess
         yield Chunk(test("正常終了すること"):
           assertTrue:
-            isSuccess
-        )
+            isSuccess)
       .provide(ZLayer:
         val issueClient = FakeIssueRestClient(doUpdateIssue = (_, _) => ())
         val restClient = FakeJiraRestClient(issueClient = issueClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
       suite("updateIssueが異常終了した場合"):
         for
@@ -158,16 +142,14 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
             .isFailure
         yield Chunk(test("異常終了すること"):
           assertTrue:
-            isFailure
-        )
+            isFailure)
       .provide(ZLayer:
         val issueClient = FakeIssueRestClient(doUpdateIssue =
           (_, _) => throw RuntimeException()
         )
         val restClient = FakeJiraRestClient(issueClient = issueClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
     suiteAll("transition"):
       suite("transitionが正常終了した場合"):
@@ -176,14 +158,12 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           isSuccess <- sut.transition(FakeJiraIssue(), 123).isSuccess
         yield Chunk(test("正常終了すること"):
           assertTrue:
-            isSuccess
-        )
+            isSuccess)
       .provide(ZLayer:
         val issueClient = FakeIssueRestClient(doTransitionIssue = (_, _) => ())
         val restClient = FakeJiraRestClient(issueClient = issueClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
 
       suite("transitionが異常終了した場合"):
         for
@@ -191,13 +171,11 @@ object JiraIssueRepoImplSpec extends ZIOSpecDefault:
           isFailure <- sut.transition(FakeJiraIssue(), 123).isFailure
         yield Chunk(test("異常終了すること"):
           assertTrue:
-            isFailure
-        )
+            isFailure)
       .provide(ZLayer:
         val issueClient = FakeIssueRestClient(doTransitionIssue =
           (_, _) => throw RuntimeException()
         )
         val restClient = FakeJiraRestClient(issueClient = issueClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraIssueRepoImpl(service)
-      )
+        yield JiraIssueRepoImpl(service))
