@@ -13,15 +13,13 @@ object JiraUserRepoImplSpec extends ZIOSpecDefault:
           Some(user) = actual: @unchecked
         yield Chunk(test("ユーザーを返すこと"):
           assertTrue:
-            user.name == "test-user"
-        )
+            user.name == "test-user")
       .provide(ZLayer:
         val userClient =
           FakeUserRestClient(doGetUser = _ => FakeUser(name = "test-user"))
         val restClient = FakeJiraRestClient(userClient = userClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraUserRepoImpl(service)
-      )
+        yield JiraUserRepoImpl(service))
 
       suite("getUserがエラーになった場合"):
         for
@@ -29,12 +27,10 @@ object JiraUserRepoImplSpec extends ZIOSpecDefault:
           isFailure <- sut.findByName("test-user").isFailure
         yield Chunk(test("失敗すること"):
           assertTrue:
-            isFailure
-        )
+            isFailure)
       .provide(ZLayer:
         val userClient =
           FakeUserRestClient(doGetUser = _ => throw RuntimeException())
         val restClient = FakeJiraRestClient(userClient = userClient)
         for service <- ZIO.succeed(FakeJiraService(restClient = restClient))
-        yield JiraUserRepoImpl(service)
-      )
+        yield JiraUserRepoImpl(service))
