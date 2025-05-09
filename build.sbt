@@ -20,7 +20,7 @@ lazy val vanilla = project
   .settings(
     name := "jira-for-scala",
     scalaVersion := "2.12.20", // scala-steward:off
-    crossScalaVersions := Seq(scalaVersion.value, "3.3.4"),
+    crossScalaVersions := Seq(scalaVersion.value, "3.3.6"),
     console / initialCommands := {
       val serverUri = sys.env.getOrElse("JIRA_SERVER_URI", "")
       val accessToken = sys.env.getOrElse("JIRA_ACCESS_TOKEN", "")
@@ -36,7 +36,7 @@ lazy val zio = project
   .in(file("zio"))
   .settings(
     name := "jira-for-zio",
-    scalaVersion := "3.3.4",
+    scalaVersion := "3.3.6",
     scalacOptions ++= Seq("-deprecation"),
     libraryDependencies ++= jiraDependencies ++
       Seq(
